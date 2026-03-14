@@ -27,8 +27,8 @@ body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--charcoal)
 
 /* ── CURSOR (desktop only) ── */
 .cursor,.cursor-ring{pointer-events:none;position:fixed;border-radius:50%;z-index:99999;transform:translate(-50%,-50%)}
-.cursor{width:12px;height:12px;background:var(--terracotta);opacity:0;transition:width .2s,height .2s,opacity .2s}
-.cursor-ring{width:38px;height:38px;border:1.5px solid var(--terracotta);opacity:0;transition:width .3s,height .3s,opacity .3s}
+.cursor{width:12px;height:12px;background:var(--terracotta);opacity:1;transition:width .2s,height .2s}
+.cursor-ring{width:38px;height:38px;border:1.5px solid var(--terracotta);opacity:0.5;transition:width .3s,height .3s}
 @media(hover:none){body{cursor:auto}}
 
 /* ── NAV ── */
@@ -758,16 +758,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <script>
 // CURSOR
 const cur=document.getElementById('cur'),curR=document.getElementById('curR');
-let mx=0,my=0,rx=0,ry=0,curOn=false;
-document.addEventListener('mousemove',function(e){
-  mx=e.clientX;my=e.clientY;
-  cur.style.left=mx+'px';cur.style.top=my+'px';
-  if(!curOn){curOn=true;cur.style.opacity='1';curR.style.opacity='0.5';}
-},{passive:true});
-(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('a,button,.cat-card,.exp-card,.testi-card').forEach(function(el){
-  el.addEventListener('mouseenter',function(){cur.style.width='20px';cur.style.height='20px';curR.style.width='56px';curR.style.height='56px';});
+cur.style.left='-100px';cur.style.top='-100px';
+curR.style.left='-100px';curR.style.top='-100px';
+var mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';},{passive:true});
+(function loop(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.cat-card,.exp-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='20px';cur.style.height='20px';curR.style.width='54px';curR.style.height='54px';});
   el.addEventListener('mouseleave',function(){cur.style.width='12px';cur.style.height='12px';curR.style.width='38px';curR.style.height='38px';});
+});
 });
   el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';curR.style.width='36px';curR.style.height='36px';});
 });
