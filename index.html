@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Courtyard Co. — Hyderabad's Curated Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#F5F0E8;
+  --warm-white:#FDFAF4;
+  --sand:#EDE5D8;
+  --terracotta:#C17A5A;
+  --deep-terra:#9A5B3C;
+  --olive:#6B6B4A;
+  --charcoal:#2C2C28;
+  --gold:#C9A86C;
+  --gold-light:#E2C98A;
+  --dark-brown:#1C1812;
+  --nav-h:72px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--charcoal);overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cur{width:12px;height:12px;background:#c17a5a;border-radius:50%;position:fixed;top:-50px;left:-50px;pointer-events:none;z-index:999999;display:block;}
+#curR{width:36px;height:36px;border:1.5px solid #c17a5a;border-radius:50%;position:fixed;top:-50px;left:-50px;pointer-events:none;z-index:999998;display:block;}
+.cursor{width:12px;height:12px;background:#c17a5a;opacity:1;transition:width .2s,height .2s}
+.cursor-ring{width:38px;height:38px;border:1.5px solid #c17a5a;opacity:0.6;transition:width .3s,height .3s}
+
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:var(--nav-h);transition:background .4s,box-shadow .4s}
+nav.scrolled{background:rgba(245,240,232,.97);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(193,122,90,.15)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dark-brown);text-decoration:none;white-space:nowrap}
+.nav-logo span{color:var(--terracotta)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:.68rem;font-weight:300;letter-spacing:.22em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;opacity:.65;transition:opacity .3s,color .3s}
+.nav-links a:hover{opacity:1;color:var(--terracotta)}
+.nav-cta{font-size:.67rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--terracotta);border:1px solid var(--terracotta);padding:9px 20px;text-decoration:none;transition:background .3s,color .3s;white-space:nowrap}
+.nav-cta:hover{background:var(--terracotta);color:#fff}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.nav-hamburger span{display:block;width:24px;height:1.5px;background:var(--charcoal);transition:transform .35s,opacity .35s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+/* mobile menu */
+.mobile-menu{display:none;position:fixed;inset:0;z-index:490;background:var(--dark-brown);flex-direction:column;align-items:center;justify-content:center;gap:36px;opacity:0;transition:opacity .4s}
+.mobile-menu.open{opacity:1}
+.mobile-menu a{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--warm-white);text-decoration:none;letter-spacing:.08em;transition:color .3s}
+.mobile-menu a:hover{color:var(--gold-light)}
+.mobile-menu .m-cta{font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;margin-top:16px;color:var(--terracotta);border:1px solid var(--terracotta);padding:13px 34px;font-family:'Jost',sans-serif}
+
+/* ── BUTTONS ── */
+.btn-primary{display:inline-block;background:var(--terracotta);color:#fff;font-family:'Jost',sans-serif;font-size:.68rem;font-weight:400;letter-spacing:.25em;text-transform:uppercase;padding:16px 38px;text-decoration:none;transition:background .3s}
+.btn-primary:hover{background:var(--deep-terra)}
+.btn-ghost{font-family:'Jost',sans-serif;font-size:.68rem;font-weight:300;letter-spacing:.22em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;border-bottom:1px solid rgba(44,44,40,.35);padding-bottom:3px;transition:color .3s,border-color .3s}
+.btn-ghost:hover{color:var(--terracotta);border-color:var(--terracotta)}
+
+/* ── HERO ── */
+.hero{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;padding-top:var(--nav-h)}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:60px 5vw 80px;position:relative;z-index:2}
+.hero-eyebrow{font-size:.62rem;font-weight:400;letter-spacing:.38em;text-transform:uppercase;color:var(--terracotta);margin-bottom:28px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,6.5vw,7.5rem);font-weight:300;line-height:.92;color:var(--dark-brown);margin-bottom:28px;}
+.hero-title em{font-style:italic;color:var(--terracotta)}
+.hero-desc{font-size:.88rem;font-weight:300;line-height:1.9;color:var(--charcoal);max-width:400px;margin-bottom:44px;}
+.hero-actions{display:flex;align-items:center;gap:32px;flex-wrap:wrap;}
+.hero-right{position:relative;overflow:hidden}
+.hero-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:55% 45%;gap:3px;}
+.mc{overflow:hidden;position:relative}
+.mc:nth-child(1){grid-column:1;grid-row:1/3}
+.mc:nth-child(2){grid-column:2;grid-row:1}
+.mc:nth-child(3){grid-column:2;grid-row:2}
+.mc img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.mc:hover img{transform:scale(1.06)}
+.mc::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(28,24,18,.1),rgba(193,122,90,.08));pointer-events:none}
+.hero-quote{position:absolute;bottom:32px;left:32px;z-index:5;}
+.hero-quote p{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.92);text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.scroll-hint{position:absolute;bottom:36px;left:5vw;display:flex;align-items:center;gap:14px;z-index:5}
+.scroll-line{width:44px;height:1px;background:var(--terracotta)}
+.scroll-text{font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--olive);font-weight:300}
+
+/* ── MARQUEE ── */
+.marquee-wrap{background:var(--terracotta);overflow:hidden;padding:18px 0;user-select:none}
+.marquee-track{display:flex;width:max-content;animation:marquee 28s linear infinite}
+.marquee-item{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;font-weight:300;color:rgba(255,255,255,.92);padding:0 44px;display:flex;align-items:center;gap:44px;white-space:nowrap}
+.marquee-item::after{content:'◆';font-size:.45rem;opacity:.55;font-style:normal}
+
+/* ── SECTION HELPERS ── */
+.section-label{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--terracotta);margin-bottom:18px;font-weight:400}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,4.2rem);font-weight:300;line-height:1.08;color:var(--dark-brown);margin-bottom:24px}
+.section-title em{font-style:italic;color:var(--terracotta)}
+
+/* ── ABOUT ── */
+.about{padding:clamp(80px,10vw,140px) 5vw;display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(48px,7vw,100px);align-items:center;max-width:1440px;margin:0 auto}
+.about-visual{position:relative}
+.about-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;position:relative}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.about-img-wrap:hover img{transform:scale(1.04)}
+.about-img-wrap::after{content:'';position:absolute;top:20px;left:20px;right:-20px;bottom:-20px;border:1px solid var(--gold);z-index:-1;pointer-events:none}
+.about-stat-badge{position:absolute;bottom:-24px;right:-24px;background:var(--dark-brown);color:#fff;padding:22px 28px;z-index:2}
+.about-stat-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--gold-light);display:block;line-height:1}
+.about-stat-lbl{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;opacity:.55;font-weight:300}
+.about-body{font-size:.88rem;font-weight:300;line-height:1.95;color:var(--charcoal);opacity:.8;margin-bottom:36px}
+.about-feats{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.af{border-top:1px solid rgba(193,122,90,.25);padding-top:14px}
+.af-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--dark-brown);margin-bottom:5px}
+.af-body{font-size:.72rem;font-weight:300;color:var(--charcoal);opacity:.6;line-height:1.65}
+
+/* ── FULL-WIDTH IMAGE BREAK ── */
+.img-break{width:100%;height:clamp(260px,40vw,520px);overflow:hidden;position:relative}
+.img-break img{width:100%;height:100%;object-fit:cover;object-position:center 40%}
+.img-break-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,24,18,.58) 0%,rgba(28,24,18,.08) 65%);display:flex;align-items:center;padding:0 8vw}
+.img-break-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3.5rem);font-weight:300;font-style:italic;color:#fff;max-width:700px;line-height:1.2}
+.img-break-quote span{color:var(--gold-light)}
+
+/* ── EXPERIENCE ── */
+.experience{background:var(--dark-brown);padding:clamp(80px,10vw,130px) 5vw;position:relative;overflow:hidden}
+.exp-bg-word{position:absolute;bottom:-60px;left:-20px;font-family:'Cormorant Garamond',serif;font-size:22vw;font-weight:300;color:rgba(255,255,255,.03);line-height:1;pointer-events:none;white-space:nowrap}
+.exp-header{text-align:center;margin-bottom:clamp(48px,6vw,80px);position:relative;z-index:1}
+.exp-header .section-label{color:var(--gold-light)}
+.exp-header .section-title{color:var(--warm-white)}
+.exp-header .section-title em{color:var(--gold-light)}
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;position:relative;z-index:1}
+.exp-card{padding:clamp(32px,4vw,52px) clamp(24px,3vw,40px);background:rgba(255,255,255,.03);border:1px solid rgba(201,168,108,.1);transition:background .4s,border-color .4s,transform .35s;position:relative;overflow:hidden}
+.exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s}
+.exp-card:hover{background:rgba(255,255,255,.07);border-color:rgba(201,168,108,.3);transform:translateY(-5px)}
+.exp-card:hover::before{transform:scaleX(1)}
+.exp-num{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;color:rgba(201,168,108,.12);line-height:1;margin-bottom:14px}
+.exp-icon{font-size:2rem;display:block;margin-bottom:16px}
+.exp-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--warm-white);margin-bottom:12px}
+.exp-text{font-size:.78rem;font-weight:300;line-height:1.85;color:rgba(253,250,244,.5)}
+
+/* ── GALLERY STRIP ── */
+.gallery-strip{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;height:clamp(200px,26vw,400px);gap:3px}
+.gs-cell{overflow:hidden;position:relative}
+.gs-cell img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.gs-cell:hover img{transform:scale(1.07)}
+.gs-cell::after{content:'';position:absolute;inset:0;background:rgba(193,122,90,0);transition:background .4s}
+.gs-cell:hover::after{background:rgba(193,122,90,.12)}
+
+/* ── NEXT EDITION ── */
+.next-edition{padding:clamp(80px,10vw,130px) 5vw;display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(48px,7vw,80px);align-items:center;max-width:1440px;margin:0 auto}
+.edition-eyebrow{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--terracotta);margin-bottom:14px;font-weight:400}
+.event-date{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,5vw,5.5rem);font-weight:300;line-height:1;color:var(--dark-brown);margin-bottom:10px}
+.event-location{font-size:.72rem;letter-spacing:.2em;font-weight:300;text-transform:uppercase;color:var(--olive);margin-bottom:44px}
+.countdown{display:flex;gap:clamp(24px,4vw,44px);margin-bottom:48px;align-items:flex-start}
+.cd-unit{text-align:center}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,4vw,3.8rem);font-weight:300;color:var(--terracotta);line-height:1;display:block}
+.cd-name{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--olive);opacity:.7;font-weight:300}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3vw,3rem);color:var(--sand);padding-top:2px}
+.edition-info{background:var(--warm-white);padding:clamp(32px,4vw,52px);border:1px solid rgba(193,122,90,.15);position:relative}
+.edition-info::before{content:'';position:absolute;top:-1px;left:40px;width:72px;height:2px;background:var(--terracotta)}
+.ed-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid rgba(44,44,40,.07)}
+.ed-row:last-child{border-bottom:none}
+.ed-key{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--olive);font-weight:300}
+.ed-val{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;color:var(--dark-brown)}
+
+/* ── CATEGORIES ── */
+.categories{background:var(--sand);padding:clamp(80px,10vw,120px) 5vw}
+.cat-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:clamp(40px,5vw,60px);flex-wrap:wrap;gap:24px}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.cat-card{background:var(--warm-white);padding:clamp(28px,3vw,40px) clamp(22px,2.5vw,32px);transition:all .4s ease;position:relative}
+.cat-card:hover{background:var(--terracotta);transform:translateY(-6px)}
+.cat-card:hover .cat-name,.cat-card:hover .cat-sub{color:#fff}
+.cat-card:hover .cat-sub{opacity:.85}
+.cat-icon{font-size:2rem;margin-bottom:16px;display:block}
+.cat-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--dark-brown);margin-bottom:8px;transition:color .4s}
+.cat-sub{font-size:.72rem;font-weight:300;line-height:1.65;color:var(--charcoal);opacity:.6;transition:color .4s,opacity .4s}
+
+/* ── VENDOR APPLY ── */
+.vendor-apply{padding:clamp(80px,10vw,140px) 5vw;display:grid;grid-template-columns:1fr 1fr;gap:clamp(48px,7vw,100px);max-width:1440px;margin:0 auto}
+.apply-tagline{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;font-weight:300;color:var(--terracotta);margin-bottom:24px}
+.apply-body{font-size:.88rem;font-weight:300;line-height:1.95;color:var(--charcoal);opacity:.75}
+.apply-form{display:flex;flex-direction:column;gap:18px}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fl{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--terracotta);font-weight:400}
+.fi,.fs,.ft{background:transparent;border:none;border-bottom:1px solid rgba(44,44,40,.2);padding:11px 0;font-family:'Jost',sans-serif;font-size:.87rem;font-weight:300;color:var(--charcoal);outline:none;transition:border-color .3s;width:100%;appearance:none}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--terracotta)}
+.ft{resize:none;height:76px}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fsub{margin-top:8px;background:var(--dark-brown);color:var(--warm-white);font-family:'Jost',sans-serif;font-size:.68rem;font-weight:400;letter-spacing:.25em;text-transform:uppercase;padding:18px 42px;border:none;cursor:pointer;transition:background .3s;align-self:flex-start}
+.fsub:hover{background:var(--terracotta)}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--charcoal);padding:clamp(80px,10vw,120px) 5vw}
+.testi-header{text-align:center;margin-bottom:clamp(48px,6vw,72px)}
+.testi-header .section-label{color:var(--gold-light)}
+.testi-header .section-title{color:var(--warm-white)}
+.testi-header .section-title em{color:var(--gold-light)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,36px)}
+.testi-card{padding:clamp(28px,3vw,40px);border:1px solid rgba(255,255,255,.07);transition:border-color .3s}
+.testi-card:hover{border-color:rgba(201,168,108,.3)}
+.tq{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;color:var(--terracotta);line-height:.7;margin-bottom:18px;display:block;opacity:.65}
+.tt{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;font-style:italic;line-height:1.75;color:rgba(253,250,244,.82);margin-bottom:24px}
+.ta{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light);font-weight:300}
+.tr{font-size:.62rem;color:rgba(255,255,255,.3);font-weight:300;margin-top:4px}
+
+/* ── INSTA STRIP ── */
+.insta-strip{padding:clamp(60px,8vw,100px) 5vw;text-align:center}
+.insta-lbl{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px;font-weight:400}
+.insta-handle{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300;color:var(--dark-brown);margin-bottom:44px}
+.insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.ig-cell{aspect-ratio:1;overflow:hidden;position:relative}
+.ig-cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.ig-cell:hover img{transform:scale(1.1)}
+.ig-cell::after{content:'♦';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;background:rgba(193,122,90,.68);opacity:0;transition:opacity .3s}
+.ig-cell:hover::after{opacity:1}
+
+/* ── FOOTER ── */
+footer{background:var(--dark-brown);color:var(--warm-white);padding:clamp(60px,8vw,90px) 5vw clamp(28px,4vw,44px)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:clamp(32px,5vw,64px);margin-bottom:clamp(40px,5vw,60px)}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;letter-spacing:.08em;margin-bottom:14px}
+.footer-brand span{color:var(--terracotta)}
+.footer-tagline{font-size:.78rem;font-weight:300;line-height:1.85;color:rgba(255,255,255,.38);max-width:240px}
+.fc-title{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-light);margin-bottom:22px;font-weight:400}
+.fc-links{list-style:none;display:flex;flex-direction:column;gap:12px}
+.fc-links a{font-size:.78rem;font-weight:300;color:rgba(255,255,255,.45);text-decoration:none;transition:color .3s}
+.fc-links a:hover{color:var(--terracotta)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-copy{font-size:.66rem;color:rgba(255,255,255,.22);font-weight:300}
+.footer-socials{display:flex;gap:18px}
+.footer-socials a{font-size:.65rem;letter-spacing:.18em;color:rgba(255,255,255,.32);text-decoration:none;text-transform:uppercase;transition:color .3s}
+.footer-socials a:hover{color:var(--terracotta)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:1;transform:translateY(0);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:100;opacity:.35;mix-blend-mode:multiply}
+
+/* ══════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+══════════════════════════════════ */
+@media(max-width:1024px){
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .hero{grid-template-columns:1fr;min-height:100svh}
+  .hero-right{height:52vw;max-height:460px;order:-1;position:relative}
+  .hero-mosaic{position:absolute;inset:0;height:100%}
+  .hero-left{padding:28px 5vw 60px;justify-content:flex-end}
+  .hero-quote{display:none}
+  .about{grid-template-columns:1fr}
+  .about-visual{max-width:460px;margin:0 auto}
+  .about-stat-badge{right:0;bottom:-16px}
+  .exp-grid{grid-template-columns:1fr 1fr}
+  .gallery-strip{grid-template-columns:1fr 1fr;height:auto}
+  .gallery-strip .gs-cell{aspect-ratio:4/3}
+  .next-edition{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .vendor-apply{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .insta-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr;row-gap:40px}
+}
+
+@media(max-width:640px){
+  :root{--nav-h:60px}
+  .nav-cta{display:none}
+  .hero-right{height:64vw;max-height:300px}
+  .hero-left{padding:20px 5vw 48px}
+  .hero-actions{flex-direction:column;align-items:flex-start;gap:20px}
+  .about-feats{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:1fr}
+  .gallery-strip{grid-template-columns:1fr 1fr}
+  .gallery-strip .gs-cell:nth-child(3),.gallery-strip .gs-cell:nth-child(4){display:none}
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .fr2{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .insta-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .cat-header{flex-direction:column;align-items:flex-start}
+  .countdown{gap:18px}
+  .about-stat-badge{right:0;bottom:-12px;padding:16px 20px}
+  .about-stat-num{font-size:2.2rem}
+}
+
+/* ── MULTIPLE EDITIONS ── */
+@media(max-width:860px){
+  .featured-event{grid-template-columns:1fr !important;}
+  .featured-event .countdown{grid-template-columns:repeat(3,1fr) !important;}
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;}
+}
+@media(max-width:600px){
+  .featured-event .countdown{grid-template-columns:repeat(3,1fr) !important;}
+}
+
+.event-check-label{display:flex;align-items:center;gap:12px;cursor:pointer;padding:10px 14px;border:1px solid rgba(44,44,40,.12);transition:border-color .3s,background .3s;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:300;color:var(--charcoal);}
+.event-check-label:hover{border-color:var(--terracotta);background:rgba(193,122,90,.04);}
+.event-check-label input[type="checkbox"]{accent-color:var(--terracotta);width:16px;height:16px;cursor:pointer;flex-shrink:0;}
+.event-check-label span{display:flex;flex-direction:column;gap:3px;}
+
+@media(max-width:900px){
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
+  [style*="grid-template-columns:1.2fr 1fr"]{grid-template-columns:1fr !important;}
+}
+@media(max-width:520px){
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr !important;}
+}
+
+.event-check-label{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 16px;border:1px solid rgba(44,44,40,.15);transition:border-color .25s,background .25s;}
+.event-check-label:hover{border-color:var(--terracotta);background:rgba(193,122,90,.04);}
+.event-check-label input[type="checkbox"]{accent-color:var(--terracotta);width:16px;height:16px;cursor:pointer;flex-shrink:0;margin-top:2px;}
+.event-check-text{display:flex;flex-direction:column;gap:2px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:300;color:var(--charcoal);}
+.event-check-text em{font-style:normal;font-size:.72rem;color:#8a8070;letter-spacing:.05em;}
+.event-check-label:has(input:checked){border-color:var(--terracotta);background:rgba(193,122,90,.07);}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="curR"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#editions" onclick="closeMenu()">Editions</a>
+  <a href="#vendors" onclick="closeMenu()">Vendors</a>
+  <a href="#apply" onclick="closeMenu()">Apply</a>
+  <a href="#apply" class="m-cta" onclick="closeMenu()">Become a Vendor</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">The Courtyard <span>Co.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#editions">Editions</a></li>
+    <li><a href="#vendors">Vendors</a></li>
+    <li><a href="#apply">Apply</a></li>
+  </ul>
+  <a href="#apply" class="nav-cta">Become a Vendor</a>
+  <button class="nav-hamburger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Hyderabad · Est. 2025 · HITEC Corridor</p>
+    <h1 class="hero-title">Where the<br><em>Courtyard</em><br>comes alive.</h1>
+    <p class="hero-desc">A curated flea market nestled inside Hyderabad's finest IT campuses. Artisans, makers, bakers &amp; creators — brought to your doorstep.</p>
+    <div class="hero-actions">
+      <a href="#editions" class="btn-primary">Next Edition →</a>
+      <a href="#vendors" class="btn-ghost">Explore Vendors</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-mosaic">
+      <div class="mc">
+        <img src="/images/img11.jpg?w=800&q=80&fit=crop" alt="Handcrafted jewelry at market" loading="eager">
+      </div>
+      <div class="mc">
+        <img src="/images/img1.jpg?w=600&q=80&fit=crop" alt="Colourful ethnic wear" loading="eager">
+      </div>
+      <div class="mc">
+        <img src="/images/img3.jpg?w=600&q=80&fit=crop" alt="Artisanal decor items" loading="eager">
+      </div>
+    </div>
+    <div class="hero-quote"><p>"Every stall tells a story."</p></div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll to explore</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">Handmade Jewelry</span>
+    <span class="marquee-item">Artisanal Food</span>
+    <span class="marquee-item">Ethnic Wear</span>
+    <span class="marquee-item">Home Décor</span>
+    <span class="marquee-item">Natural Skincare</span>
+    <span class="marquee-item">Vintage Finds</span>
+    <span class="marquee-item">Live Art</span>
+    <span class="marquee-item">Plant Stalls</span>
+    <span class="marquee-item">Custom Portraits</span>
+    <span class="marquee-item">Chai &amp; Conversations</span>
+    <span class="marquee-item">Handmade Jewelry</span>
+    <span class="marquee-item">Artisanal Food</span>
+    <span class="marquee-item">Ethnic Wear</span>
+    <span class="marquee-item">Home Décor</span>
+    <span class="marquee-item">Natural Skincare</span>
+    <span class="marquee-item">Vintage Finds</span>
+    <span class="marquee-item">Live Art</span>
+    <span class="marquee-item">Plant Stalls</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual reveal">
+    <div class="about-img-wrap">
+      <img src="/images/img10.jpg?w=900&q=80&fit=crop&crop=center" alt="Vibrant outdoor market with people browsing stalls"/>
+    </div>
+    <div class="about-stat-badge">
+      <span class="about-stat-num">40+</span>
+      <span class="about-stat-lbl">Curated Stalls</span>
+    </div>
+  </div>
+  <div class="reveal d2">
+    <p class="section-label">Our Philosophy</p>
+    <h2 class="section-title">Not just a market.<br>A <em>moment.</em></h2>
+    <p class="about-body">The Courtyard Co. was born from a simple belief — that the best discoveries happen by accident. We plant curated flea markets inside Hyderabad's IT campuses so that on your lunch break, between meetings, or on a quiet Saturday morning, you might stumble upon something that makes you stop.<br><br>Every vendor is handpicked. Every edition is themed. Every courtyard becomes a destination.</p>
+    <div class="about-feats">
+      <div class="af"><p class="af-title">Curated Always</p><p class="af-body">We review every application. No duplicates, no clutter — only craft.</p></div>
+      <div class="af"><p class="af-title">IT-Embedded</p><p class="af-body">Inside Mindspace, DLF &amp; Ascendas campuses. Right where you are.</p></div>
+      <div class="af"><p class="af-title">Community First</p><p class="af-body">Supporting Hyderabad's indie creators, home-bakers &amp; small businesses.</p></div>
+      <div class="af"><p class="af-title">Monthly Editions</p><p class="af-body">Fresh theme, fresh faces, every single month.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL-WIDTH IMAGE BREAK -->
+<div class="img-break reveal">
+  <img src="/images/img16.jpg?w=1600&q=80&fit=crop&crop=center" alt="Busy artisan market event with happy visitors"/>
+  <div class="img-break-overlay">
+    <p class="img-break-quote">"Where <span>discovery</span> is the whole point."</p>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="exp-bg-word">COURTYARD</div>
+  <div class="exp-header reveal">
+    <p class="section-label">What to Expect</p>
+    <h2 class="section-title">The <em>Courtyard</em> Experience</h2>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-card reveal d1">
+      <div class="exp-num">01</div><span class="exp-icon">🛍️</span>
+      <h3 class="exp-title">Curated Vendor Mix</h3>
+      <p class="exp-text">30–40 handpicked stalls across jewelry, fashion, wellness, food, décor, and art — selected for quality and originality.</p>
+    </div>
+    <div class="exp-card reveal d2">
+      <div class="exp-num">02</div><span class="exp-icon">🎶</span>
+      <h3 class="exp-title">Live Ambient Music</h3>
+      <p class="exp-text">Acoustic sets that set the mood without demanding attention. The perfect backdrop for an afternoon well spent.</p>
+    </div>
+    <div class="exp-card reveal d3">
+      <div class="exp-num">03</div><span class="exp-icon">☕</span>
+      <h3 class="exp-title">Chai &amp; Bites</h3>
+      <p class="exp-text">Specialty coffee, artisanal chai, street food reimagined — because every great market is also about the food.</p>
+    </div>
+    <div class="exp-card reveal d1">
+      <div class="exp-num">04</div><span class="exp-icon">📸</span>
+      <h3 class="exp-title">Instagrammable Spaces</h3>
+      <p class="exp-text">Thoughtfully designed setups — each edition has its own visual identity and a story worth sharing.</p>
+    </div>
+    <div class="exp-card reveal d2">
+      <div class="exp-num">05</div><span class="exp-icon">🌿</span>
+      <h3 class="exp-title">Open Courtyard Setting</h3>
+      <p class="exp-text">Held in open-air zones of Hyderabad's top IT parks — breezy, beautiful, and completely unexpected.</p>
+    </div>
+    <div class="exp-card reveal d3">
+      <div class="exp-num">06</div><span class="exp-icon">✨</span>
+      <h3 class="exp-title">Themed Editions</h3>
+      <p class="exp-text">Monsoon Bazaar. Festive Edit. Summer Finds. Each edition has its own character, colour and community.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<div class="gallery-strip">
+  <div class="gs-cell">
+    <img src="/images/img8.jpg?w=800&q=80&fit=crop" alt="Handmade jewelry at a craft market"/>
+  </div>
+  <div class="gs-cell">
+    <img src="/images/img5.jpg?w=500&q=80&fit=crop" alt="Artisan ceramics display"/>
+  </div>
+  <div class="gs-cell">
+    <img src="/images/img9.jpg?w=500&q=80&fit=crop" alt="Colourful fashion at market"/>
+  </div>
+  <div class="gs-cell">
+    <img src="/images/img6.jpg?w=700&q=80&fit=crop" alt="Outdoor market crowd"/>
+  </div>
+</div>
+
+<!-- EDITIONS -->
+<section class="next-edition" id="editions">
+  <div class="reveal" style="text-align:center;margin-bottom:48px;">
+    <p class="edition-eyebrow">Upcoming Editions</p>
+    <h2 class="section-title" style="color:#f5f0e8;">Where will we pop up <em>next?</em></h2>
+    <p style="font-size:.85rem;color:rgba(245,240,232,.5);margin-top:12px;font-weight:300;">Four curated markets across Hyderabad's finest IT campuses this season</p>
+  </div>
+
+  <!-- Featured Next Event -->
+  <div class="reveal" style="max-width:960px;margin:0 auto 56px;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,108,.25);padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,5vw,56px);align-items:center;">
+    <div>
+      <p style="font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--terracotta);margin-bottom:14px;font-weight:400;">Next Up · Featured Edition</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:#f5f0e8;line-height:1;margin-bottom:10px;">The Summer Edit</h3>
+      <p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--olive);margin-bottom:32px;">📍 Raheja Mindspace · Madhapur</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:32px;">
+        <div><p style="font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--olive);opacity:.7;margin-bottom:5px;">Date</p><p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#f5f0e8;font-weight:300;">Apr 18</p></div>
+        <div><p style="font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--olive);opacity:.7;margin-bottom:5px;">Time</p><p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#f5f0e8;font-weight:300;">10–6pm</p></div>
+        <div><p style="font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--olive);opacity:.7;margin-bottom:5px;">Stalls</p><p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#f5f0e8;font-weight:300;">40+</p></div>
+      </div>
+      <a href="#apply" class="btn-primary">Apply as Vendor →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+      <div class="cd-block"><span class="cd-num" id="cd-d">00</span><span class="cd-name">Days</span></div>
+      <div class="cd-block"><span class="cd-num" id="cd-h">00</span><span class="cd-name">Hours</span></div>
+      <div class="cd-block"><span class="cd-num" id="cd-m">00</span><span class="cd-name">Mins</span></div>
+    </div>
+  </div>
+
+  <!-- All 4 Events Grid -->
+  <div class="reveal" style="max-width:1160px;margin:0 auto;">
+    <p style="font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--olive);margin-bottom:24px;text-align:center;opacity:.7;">Full Season Schedule · 2026</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+
+      <div style="background:rgba(193,122,90,.12);border:1px solid rgba(193,122,90,.35);padding:28px 22px;">
+        <p style="font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px;">April 2026 · Next</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:#f5f0e8;margin-bottom:8px;">The Summer Edit</h4>
+        <p style="font-size:.72rem;color:var(--olive);margin-bottom:12px;">📍 Raheja Mindspace</p>
+        <p style="font-size:.75rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:16px;">Jewelry, fashion, artisanal food & summer finds.</p>
+        <div style="border-top:1px solid rgba(201,168,108,.15);padding-top:14px;display:flex;justify-content:space-between;">
+          <span style="font-size:.65rem;color:var(--olive);">Sat, Apr 18</span>
+          <span style="font-size:.65rem;color:var(--terracotta);">40+ stalls</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(201,168,108,.12);padding:28px 22px;transition:background .3s,border-color .3s;" onmouseenter="this.style.background='rgba(255,255,255,.06)';this.style.borderColor='rgba(201,168,108,.3)'" onmouseleave="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(201,168,108,.12)'">
+        <p style="font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px;">May 2026</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:#f5f0e8;margin-bottom:8px;">The Monsoon Edit</h4>
+        <p style="font-size:.72rem;color:var(--olive);margin-bottom:12px;">📍 DLF Cybercity</p>
+        <p style="font-size:.75rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:16px;">Pottery, plants, handloom & monsoon-ready finds.</p>
+        <div style="border-top:1px solid rgba(201,168,108,.15);padding-top:14px;display:flex;justify-content:space-between;">
+          <span style="font-size:.65rem;color:var(--olive);">Sat, May 16</span>
+          <span style="font-size:.65rem;color:var(--terracotta);">40+ stalls</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(201,168,108,.12);padding:28px 22px;transition:background .3s,border-color .3s;" onmouseenter="this.style.background='rgba(255,255,255,.06)';this.style.borderColor='rgba(201,168,108,.3)'" onmouseleave="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(201,168,108,.12)'">
+        <p style="font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px;">June 2026</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:#f5f0e8;margin-bottom:8px;">The Craft Mela</h4>
+        <p style="font-size:.72rem;color:var(--olive);margin-bottom:12px;">📍 Ascendas IT Park</p>
+        <p style="font-size:.75rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:16px;">Block prints, brass, leather & artisan chai.</p>
+        <div style="border-top:1px solid rgba(201,168,108,.15);padding-top:14px;display:flex;justify-content:space-between;">
+          <span style="font-size:.65rem;color:var(--olive);">Sat, Jun 20</span>
+          <span style="font-size:.65rem;color:var(--terracotta);">50+ stalls</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(201,168,108,.12);padding:28px 22px;transition:background .3s,border-color .3s;" onmouseenter="this.style.background='rgba(255,255,255,.06)';this.style.borderColor='rgba(201,168,108,.3)'" onmouseleave="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(201,168,108,.12)'">
+        <p style="font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px;">July 2026</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:#f5f0e8;margin-bottom:8px;">The Heritage Edit</h4>
+        <p style="font-size:.72rem;color:var(--olive);margin-bottom:12px;">📍 RMZ Futura</p>
+        <p style="font-size:.75rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:16px;">Bidriware, Nirmal paintings & Telangana crafts.</p>
+        <div style="border-top:1px solid rgba(201,168,108,.15);padding-top:14px;display:flex;justify-content:space-between;">
+          <span style="font-size:.65rem;color:var(--olive);">Sat, Jul 18</span>
+          <span style="font-size:.65rem;color:var(--terracotta);">45+ stalls</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Details bar -->
+  <div class="reveal ed-keys" style="max-width:960px;margin:40px auto 0;">
+    <div class="ed-key-item"><span class="ed-key">Entry</span><span class="ed-val">Free · Open to All</span></div>
+    <div class="ed-key-item"><span class="ed-key">Timings</span><span class="ed-val">10:00 AM – 6:00 PM</span></div>
+    <div class="ed-key-item"><span class="ed-key">Locations</span><span class="ed-val">IT Campuses, Hyderabad</span></div>
+    <div class="ed-key-item"><span class="ed-key">Stalls</span><span class="ed-val">40–50 Curated Vendors</span></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories" id="vendors">
+  <div class="cat-header">
+    <div>
+      <p class="section-label reveal">What We Curate</p>
+      <h2 class="section-title reveal d1">The kinds of <em>makers</em><br>you'll find here.</h2>
+    </div>
+    <a href="#apply" class="btn-primary reveal d2">Apply as Vendor</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card reveal d1"><span class="cat-icon">💍</span><p class="cat-name">Jewelry &amp; Accessories</p><p class="cat-sub">Handcrafted silver, terracotta, beaded and contemporary statement pieces.</p></div>
+    <div class="cat-card reveal d2"><span class="cat-icon">🧥</span><p class="cat-name">Fashion &amp; Wear</p><p class="cat-sub">Indie labels, block-printed cotton, hand-embroidered pieces, and thrift finds.</p></div>
+    <div class="cat-card reveal d3"><span class="cat-icon">🧴</span><p class="cat-name">Wellness &amp; Skincare</p><p class="cat-sub">Natural, cold-pressed, handmade skincare — no harsh chemicals, just care.</p></div>
+    <div class="cat-card reveal d4"><span class="cat-icon">🏡</span><p class="cat-name">Home &amp; Décor</p><p class="cat-sub">Candles, ceramics, macramé, wall art, and things that make spaces feel alive.</p></div>
+    <div class="cat-card reveal d1"><span class="cat-icon">🧁</span><p class="cat-name">Artisanal Food</p><p class="cat-sub">Home bakers, spice blenders, jam makers &amp; specialty chai artisans.</p></div>
+    <div class="cat-card reveal d2"><span class="cat-icon">🌱</span><p class="cat-name">Plants &amp; Botanicals</p><p class="cat-sub">Succulents, rare houseplants, dried botanicals and handmade planters.</p></div>
+    <div class="cat-card reveal d3"><span class="cat-icon">🎨</span><p class="cat-name">Art &amp; Prints</p><p class="cat-sub">Original paintings, limited art prints, illustrations and custom portraits.</p></div>
+    <div class="cat-card reveal d4"><span class="cat-icon">📚</span><p class="cat-name">Books &amp; Stationery</p><p class="cat-sub">Preloved books, handcrafted journals, indie zines and designer stationery.</p></div>
+  </div>
+</section>
+
+<!-- VENDOR APPLY -->
+<section class="vendor-apply" id="apply">
+  <div class="reveal">
+    <p class="section-label">Sell With Us</p>
+    <h2 class="section-title">Bring your craft<br>to the <em>courtyard.</em></h2>
+    <p class="apply-tagline">"Every great stall begins with a single application."</p>
+    <p class="apply-body">We review every application personally. We look for originality, quality, and a genuine story behind the product. Whether you're a home baker, indie designer, or seasoned artisan — if your work is good, we want you here.<br><br>Stalls from ₹1,500/day. Select one or more editions below.</p>
+
+    <div style="margin-top:36px;">
+      <p style="font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--terracotta);font-weight:400;margin-bottom:16px;">Choose Your Edition(s)</p>
+      <div style="display:flex;flex-direction:column;gap:10px;" id="event-list">
+        <label class="event-check-label">
+          <input type="checkbox" class="event-check" value="The Summer Edit — Apr 18, Raheja Mindspace">
+          <span class="event-check-text">The Summer Edit <em>Apr 18 · Raheja Mindspace</em></span>
+        </label>
+        <label class="event-check-label">
+          <input type="checkbox" class="event-check" value="The Monsoon Edit — May 16, DLF Cybercity">
+          <span class="event-check-text">The Monsoon Edit <em>May 16 · DLF Cybercity</em></span>
+        </label>
+        <label class="event-check-label">
+          <input type="checkbox" class="event-check" value="The Craft Mela — Jun 20, Ascendas IT Park">
+          <span class="event-check-text">The Craft Mela <em>Jun 20 · Ascendas IT Park</em></span>
+        </label>
+        <label class="event-check-label">
+          <input type="checkbox" class="event-check" value="The Heritage Edit — Jul 18, RMZ Futura">
+          <span class="event-check-text">The Heritage Edit <em>Jul 18 · RMZ Futura</em></span>
+        </label>
+      </div>
+      <p id="event-error" style="color:#c17a5a;font-size:.75rem;margin-top:8px;display:none;">Please select at least one edition.</p>
+    </div>
+  </div>
+
+  <div class="reveal d2">
+    <div class="apply-form" id="apply-form">
+      <div class="fr2">
+        <div class="fg"><label class="fl">Your Name *</label><input type="text" id="f-name" class="fi" placeholder="Priya Sharma"></div>
+        <div class="fg"><label class="fl">Business Name *</label><input type="text" id="f-biz" class="fi" placeholder="Studio Bloom"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Category *</label>
+        <select class="fs" id="f-cat">
+          <option value="">Select your category</option>
+          <option>Jewelry &amp; Accessories</option>
+          <option>Fashion &amp; Wear</option>
+          <option>Wellness &amp; Skincare</option>
+          <option>Home &amp; Décor</option>
+          <option>Artisanal Food</option>
+          <option>Plants &amp; Botanicals</option>
+          <option>Art &amp; Prints</option>
+          <option>Books &amp; Stationery</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Stall Size Preference</label>
+        <select class="fs" id="f-stall">
+          <option value="">Select stall size</option>
+          <option value="Basic 6x4 ft — ₹1,500/day">Basic — 6×4 ft (₹1,500/day)</option>
+          <option value="Standard 8x6 ft — ₹2,500/day">Standard — 8×6 ft (₹2,500/day)</option>
+          <option value="Premium Corner — ₹4,500/day">Premium Corner (₹4,500/day)</option>
+          <option value="Food Stall — ₹5,000/day">Food Stall (₹5,000/day)</option>
+        </select>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Instagram Handle</label><input type="text" id="f-insta" class="fi" placeholder="@studiobloom"></div>
+        <div class="fg"><label class="fl">Phone Number *</label><input type="tel" id="f-phone" class="fi" placeholder="+91 99516 14461"></div>
+      </div>
+      <div class="fg"><label class="fl">Tell us about your products *</label><textarea class="ft" id="f-msg" placeholder="What do you make, and what makes it special?"></textarea></div>
+      <button class="fsub" id="submitBtn">Submit Application →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testi-header reveal">
+    <p class="section-label">From the Community</p>
+    <h2 class="section-title">What people <em>say.</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal d1">
+      <span class="tq">"</span>
+      <p class="tt">I discovered three incredible indie brands I'd never have found online. The Courtyard Co. completely changed my idea of what a market can feel like.</p>
+      <p class="ta">Meera Reddy</p><p class="tr">Product Manager · DLF Cybercity</p>
+    </div>
+    <div class="testi-card reveal d2">
+      <span class="tq">"</span>
+      <p class="tt">As a vendor, I made more sales in one afternoon here than in a week of online selling. The crowd genuinely wants to buy, not just browse.</p>
+      <p class="ta">Ankita Joshi</p><p class="tr">Founder, Rang Botanicals</p>
+    </div>
+    <div class="testi-card reveal d3">
+      <span class="tq">"</span>
+      <p class="tt">The curation is what sets it apart. Every stall was chosen with intent. It's a genuinely premium experience right in the middle of a workday.</p>
+      <p class="ta">Siddharth Nair</p><p class="tr">Engineering Lead · Mindspace Madhapur</p>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM STRIP -->
+<section class="insta-strip">
+  <p class="insta-lbl">Follow Along</p>
+  <p class="insta-handle">@thecourtyardco.hyd</p>
+  <div class="insta-grid">
+    <div class="ig-cell"><img src="/images/img14.jpg?w=400&q=80&fit=crop" alt="Market vendor display"/></div>
+    <div class="ig-cell"><img src="/images/img9.jpg?w=400&q=80&fit=crop" alt="Handcrafted items at stall"/></div>
+    <div class="ig-cell"><img src="/images/img7.jpg?w=400&q=80&fit=crop" alt="Flowers and botanicals"/></div>
+    <div class="ig-cell"><img src="/images/img9.jpg?w=400&q=80&fit=crop" alt="Fashion display at market"/></div>
+    <div class="ig-cell"><img src="/images/img2.jpg?w=400&q=80&fit=crop" alt="Artisan candles and home goods"/></div>
+    <div class="ig-cell"><img src="/images/img3.jpg?w=400&q=80&fit=crop" alt="Food stall treats and snacks"/></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <p class="footer-brand">The Courtyard <span>Co.</span></p>
+      <p class="footer-tagline">Hyderabad's most loved curated flea market — inside the city's finest IT campuses. Monthly. Curated. Unforgettable.</p>
+    </div>
+    <div>
+      <p class="fc-title">Navigate</p>
+      <ul class="fc-links">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#editions">Upcoming Editions</a></li>
+        <li><a href="#vendors">Vendor Categories</a></li>
+        <li><a href="#apply">Apply as Vendor</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="fc-title">Locations</p>
+      <ul class="fc-links">
+        <li><a href="#">Mindspace, Madhapur</a></li>
+        <li><a href="#">DLF Cybercity</a></li>
+        <li><a href="#">Ascendas IT Park</a></li>
+        <li><a href="#">RMZ Futura</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="fc-title">Connect</p>
+      <ul class="fc-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp Community</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="mailto:thecourtyardcompany@gmail.com">thecourtyardcompany@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 The Courtyard Co. · Hyderabad, India · Made with love.</p>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">WhatsApp</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+
+});
+});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';curR.style.width='36px';curR.style.height='36px';});
+});
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+// HAMBURGER
+const burger=document.getElementById('burger'),mm=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{
+  const open=burger.classList.toggle('open');
+  if(open){mm.style.display='flex';requestAnimationFrame(()=>mm.classList.add('open'));}
+  else{mm.classList.remove('open');setTimeout(()=>{mm.style.display='none';},400);}
+});
+function closeMenu(){
+  burger.classList.remove('open');
+  mm.classList.remove('open');
+  setTimeout(()=>{mm.style.display='none';},400);
+}
+
+// SCROLL REVEAL
+const ro=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting)e.target.classList.add('visible');
+}),{threshold:.08,rootMargin:'0px 0px -24px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// COUNTDOWN
+const ed=new Date('2025-04-12T10:00:00');
+function tick(){
+  const diff=ed-Date.now();
+  if(diff<=0){['cd-d','cd-h','cd-m'].forEach(id=>document.getElementById(id).textContent='00');return;}
+  document.getElementById('cd-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+}
+tick();setInterval(tick,30000);
+
+// FORM
+document.getElementById('submitBtn').addEventListener('click', function() {
+  var name = document.getElementById('f-name').value.trim();
+  var biz = document.getElementById('f-biz').value.trim();
+  var cat = document.getElementById('f-cat').value;
+  var insta = document.getElementById('f-insta').value.trim();
+  var phone = document.getElementById('f-phone').value.trim();
+  var msg = document.getElementById('f-msg').value.trim();
+  var stall = document.getElementById('f-stall').value;
+  var events = Array.from(document.querySelectorAll('.event-check:checked')).map(function(c){return c.value;});
+  var errEl = document.getElementById('event-error');
+
+  errEl.style.display = 'none';
+
+  if (!name || !biz || !cat || !phone || !msg) {
+    alert('Please fill in all required fields (marked with *).');
+    return;
+  }
+  if (events.length === 0) {
+    errEl.style.display = 'block';
+    document.getElementById('event-list').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  var submission = {
+    id: 'sub_' + Date.now(),
+    name: name, biz: biz, cat: cat, insta: insta, phone: phone, msg: msg, stall: stall,
+    events: events,
+    status: 'pending',
+    date: new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'})
+  };
+
+  try {
+    var existing = JSON.parse(localStorage.getItem('tcc-submissions') || '[]');
+    existing.unshift(submission);
+    localStorage.setItem('tcc-submissions', JSON.stringify(existing));
+  } catch(e) { console.log('Storage error', e); }
+
+  var eventItems = events.map(function(e){ return '<li style="margin:4px 0;font-size:.82rem;">✓ ' + e + '</li>'; }).join('');
+  document.getElementById('apply-form').innerHTML =
+    '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;text-align:center;gap:16px;padding:32px 16px;">' +
+    '<div style="width:52px;height:52px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;">✓</div>' +
+    '<p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dark-brown);font-weight:300;">Application Received!</p>' +
+    '<p style="font-size:.85rem;color:var(--charcoal);line-height:1.8;max-width:360px;">Thank you, <strong>' + name + '</strong>. We've received your application for <em>' + biz + '</em>.</p>' +
+    '<div style="text-align:left;background:rgba(193,122,90,.06);border:1px solid rgba(193,122,90,.2);padding:16px 24px;width:100%;max-width:340px;">' +
+    '<p style="font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--terracotta);margin-bottom:8px;font-weight:400;">Applied For ' + events.length + ' Edition' + (events.length > 1 ? 's' : '') + '</p>' +
+    '<ul style="list-style:none;padding:0;margin:0;">' + eventItems + '</ul>' +
+    '</div>' +
+    '<p style="font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--terracotta);">We'll be in touch within 3–5 business days.</p>' +
+    '</div>';
+});
+</script>
+
+<!-- CURSOR JS -->
+<script>
+(function(){
+  var dot = document.getElementById('cur');
+  var ring = document.getElementById('curR');
+  if(!dot || !ring) return;
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+  (function tick(){
+    rx += (mx-rx)*0.15;
+    ry += (my-ry)*0.15;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){dot.style.transform='scale(1.8)';ring.style.transform='scale(1.4)';});
+    el.addEventListener('mouseleave',function(){dot.style.transform='scale(1)';ring.style.transform='scale(1)';});
+  });
+})();
+</script>
+</body>
+</html>
