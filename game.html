@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="theme-color" content="#C17A5A"/>
+<title>Courtyard Flyer — The Courtyard Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#F5F0E8;
+  --warm-white:#FDFAF4;
+  --sand:#EDE5D8;
+  --terracotta:#C17A5A;
+  --deep-terra:#9A5B3C;
+  --olive:#6B6B4A;
+  --charcoal:#2C2C28;
+  --gold:#C9A86C;
+  --gold-light:#E2C98A;
+  --dark-brown:#1C1812;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--dark-brown);
+  color:var(--charcoal);
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#wrap{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 120% at 50% 0%,#2a2018,#140f0a);
+}
+#stage{
+  position:relative;
+  width:100%;height:100%;
+  max-width:480px;max-height:900px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  overflow:hidden;
+  background:var(--cream);
+}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+
+/* ── overlays ── */
+.overlay{
+  position:absolute;inset:0;z-index:10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:0 32px;
+  background:linear-gradient(180deg,rgba(28,24,18,.30),rgba(28,24,18,.62));
+  backdrop-filter:blur(2px);
+  transition:opacity .45s ease;
+}
+.overlay.hidden{opacity:0;pointer-events:none}
+
+.eyebrow{
+  font-size:.6rem;font-weight:400;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:22px;
+}
+.title{
+  font-family:'Cormorant Garamond',serif;font-weight:300;line-height:.95;
+  font-size:clamp(3.2rem,16vw,5rem);color:var(--warm-white);margin-bottom:6px;
+}
+.title em{font-style:italic;color:var(--terracotta)}
+.subtitle{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:1.05rem;color:rgba(255,255,255,.78);margin-bottom:40px;
+}
+.hint{
+  font-size:.72rem;font-weight:300;letter-spacing:.05em;line-height:1.9;
+  color:rgba(255,255,255,.7);max-width:280px;margin-bottom:42px;
+}
+.hint b{color:var(--gold-light);font-weight:400}
+
+.btn{
+  display:inline-block;cursor:pointer;border:none;
+  background:var(--terracotta);color:#fff;
+  font-family:'Jost',sans-serif;font-size:.7rem;font-weight:400;
+  letter-spacing:.28em;text-transform:uppercase;
+  padding:17px 44px;transition:background .3s,transform .15s;
+}
+.btn:hover{background:var(--deep-terra)}
+.btn:active{transform:scale(.96)}
+
+.scores{
+  display:flex;gap:48px;margin-bottom:38px;
+}
+.score-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.score-num{
+  font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:3.2rem;line-height:1;color:var(--warm-white);
+}
+.score-lbl{
+  font-size:.56rem;letter-spacing:.32em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);font-weight:400;
+}
+.medal{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.4rem;color:var(--gold-light);margin-bottom:28px;min-height:1.4em;
+}
+
+/* live score during play */
+#liveScore{
+  position:absolute;top:max(28px,env(safe-area-inset-top));left:0;right:0;
+  z-index:8;text-align:center;
+  font-family:'Cormorant Garamond',serif;font-weight:500;
+  font-size:3.4rem;color:var(--warm-white);
+  text-shadow:0 3px 14px rgba(28,24,18,.45);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+#liveScore.show{opacity:1}
+
+/* back link */
+.back{
+  position:absolute;top:max(18px,env(safe-area-inset-top));left:18px;z-index:11;
+  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:300;
+  color:rgba(255,255,255,.6);text-decoration:none;
+  display:flex;align-items:center;gap:8px;transition:color .3s;
+}
+.back:hover{color:var(--gold-light)}
+.brandmark{
+  position:absolute;bottom:max(20px,env(safe-area-inset-bottom));left:0;right:0;
+  z-index:9;text-align:center;
+  font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.1em;
+  color:rgba(255,255,255,.0);pointer-events:none;
+}
+.overlay .brandmark{color:rgba(255,255,255,.45)}
+.overlay .brandmark span{color:var(--terracotta)}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="c"></canvas>
+
+    <a href="/" class="back">← Courtyard Co.</a>
+    <div id="liveScore">0</div>
+
+    <!-- START -->
+    <div class="overlay" id="startScreen">
+      <p class="eyebrow">The Courtyard Co.</p>
+      <h1 class="title">Courtyard <em>Flyer</em></h1>
+      <p class="subtitle">A little flight through the market arches</p>
+      <p class="hint">Tap, click or press <b>Space</b> to flap.<br/>Glide between the terracotta arches.<br/>Don't touch the pillars or the ground.</p>
+      <button class="btn" id="startBtn">Begin Flight</button>
+      <div class="brandmark">The Courtyard <span>Co.</span></div>
+    </div>
+
+    <!-- GAME OVER -->
+    <div class="overlay hidden" id="overScreen">
+      <p class="eyebrow">Flight Ended</p>
+      <p class="medal" id="medal"></p>
+      <div class="scores">
+        <div class="score-box">
+          <div class="score-num" id="finalScore">0</div>
+          <div class="score-lbl">Score</div>
+        </div>
+        <div class="score-box">
+          <div class="score-num" id="bestScore">0</div>
+          <div class="score-lbl">Best</div>
+        </div>
+      </div>
+      <button class="btn" id="retryBtn">Fly Again</button>
+      <div class="brandmark">The Courtyard <span>Co.</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  const stage = document.getElementById('stage');
+
+  // palette
+  const C = {
+    sky1:'#F5F0E8', sky2:'#EDE5D8', sky3:'#E8DCC8',
+    terra:'#C17A5A', deepTerra:'#9A5B3C', terraDark:'#7E4A30',
+    olive:'#6B6B4A', gold:'#C9A86C', goldLt:'#E2C98A',
+    charcoal:'#2C2C28', cream:'#FDFAF4', sand:'#D8C7A8'
+  };
+
+  let W=0, H=0, DPR=1;
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio||1, 2.5);
+    W = stage.clientWidth;
+    H = stage.clientHeight;
+    cv.width = Math.round(W*DPR);
+    cv.height = Math.round(H*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize);
+
+  // ── game state ──
+  const STATE = {READY:0, PLAY:1, DEAD:2};
+  let state = STATE.READY;
+
+  let bird, pipes, ground, score, best, frame, gapBase, speed, spawnGap, lastSpawn;
+  let shakeT=0, flashT=0;
+
+  best = parseInt(localStorage.getItem('courtyard_flyer_best')||'0',10) || 0;
+
+  // background clouds / lanterns drift
+  let decor = [];
+  function buildDecor(){
+    decor = [];
+    const n = 5;
+    for(let i=0;i<n;i++){
+      decor.push({
+        x: Math.random()*W,
+        y: 60 + Math.random()*(H*0.45),
+        s: 0.4 + Math.random()*0.8,
+        v: 0.15 + Math.random()*0.25,
+        lantern: Math.random()<0.45
+      });
+    }
+  }
+
+  function reset(){
+    const r = Math.max(13, Math.min(W,H)*0.035);
+    bird = { x: W*0.30, y: H*0.42, r:r, vy:0, rot:0, wing:0 };
+    pipes = [];
+    score = 0;
+    frame = 0;
+    speed = Math.max(2.2, W*0.0065);
+    gapBase = Math.max(150, H*0.26);
+    spawnGap = Math.max(78, W*0.62);    // horizontal distance between arches
+    lastSpawn = -spawnGap;              // spawn first one soon
+    ground = { y: H - Math.max(70, H*0.10), x:0 };
+    shakeT=0; flashT=0;
+    buildDecor();
+  }
+
+  function spawnPipe(){
+    const margin = 60;
+    const gap = gapBase * (0.92 + Math.random()*0.16);
+    const minTop = margin;
+    const maxTop = ground.y - gap - margin;
+    const top = minTop + Math.random()*Math.max(20,(maxTop-minTop));
+    pipes.push({ x: W + 40, top:top, gap:gap, w: Math.max(58, W*0.16), passed:false });
+  }
+
+  function flap(){
+    if(state===STATE.READY){ start(); }
+    if(state===STATE.PLAY){
+      bird.vy = -Math.max(6.4, H*0.0105);
+      bird.wing = 1;
+    }
+  }
+
+  function start(){
+    reset();
+    state = STATE.PLAY;
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('overScreen').classList.add('hidden');
+    document.getElementById('liveScore').classList.add('show');
+  }
+
+  function die(){
+    if(state!==STATE.PLAY) return;
+    state = STATE.DEAD;
+    shakeT = 16; flashT = 8;
+    if(score>best){ best=score; localStorage.setItem('courtyard_flyer_best', String(best)); }
+    document.getElementById('liveScore').classList.remove('show');
+    const fs = document.getElementById('finalScore');
+    const bs = document.getElementById('bestScore');
+    const medalEl = document.getElementById('medal');
+    fs.textContent = score; bs.textContent = best;
+    let m = '';
+    if(score>=40) m='✦ Market Legend ✦';
+    else if(score>=25) m='Golden Wings';
+    else if(score>=15) m='Seasoned Flyer';
+    else if(score>=8) m='Taking Flight';
+    else if(score>=3) m='Fledgling';
+    else m='Keep Practising';
+    medalEl.textContent = m;
+    // small delay so the death is felt
+    setTimeout(()=>document.getElementById('overScreen').classList.remove('hidden'), 360);
+  }
+
+  // ── update ──
+  function update(){
+    frame++;
+    // decor drift
+    for(const d of decor){
+      d.x -= d.v*(state===STATE.PLAY?1:0.5);
+      if(d.x < -60){ d.x = W+40; d.y = 60+Math.random()*(H*0.45); }
+    }
+
+    if(state===STATE.PLAY){
+      // bird physics
+      const grav = Math.max(0.42, H*0.00072);
+      bird.vy += grav;
+      bird.y += bird.vy;
+      bird.rot = Math.max(-0.5, Math.min(1.2, bird.vy*0.045));
+      bird.wing *= 0.86;
+
+      // spawn arches by distance
+      lastSpawn += speed;
+      if(lastSpawn >= spawnGap){ spawnPipe(); lastSpawn = 0; }
+
+      // move pipes
+      for(const p of pipes){
+        p.x -= speed;
+        if(!p.passed && p.x + p.w < bird.x){
+          p.passed = true; score++;
+          document.getElementById('liveScore').textContent = score;
+          // gentle difficulty ramp
+          speed += 0.04;
+          if(gapBase>140) gapBase -= 1.1;
+        }
+      }
+      while(pipes.length && pipes[0].x + pipes[0].w < -40) pipes.shift();
+
+      // collisions
+      const b = bird;
+      if(b.y + b.r >= ground.y){ b.y = ground.y - b.r; die(); }
+      if(b.y - b.r <= 0){ b.y = b.r; b.vy = 0; }
+      for(const p of pipes){
+        if(b.x + b.r*0.82 > p.x && b.x - b.r*0.82 < p.x + p.w){
+          if(b.y - b.r*0.82 < p.top || b.y + b.r*0.82 > p.top + p.gap){ die(); break; }
+        }
+      }
+    } else if(state===STATE.DEAD){
+      // let the bird fall to ground
+      const grav = Math.max(0.42, H*0.00072);
+      bird.vy += grav;
+      bird.y += bird.vy;
+      bird.rot = Math.min(1.5, bird.rot + 0.05);
+      if(bird.y + bird.r > ground.y){ bird.y = ground.y - bird.r; bird.vy=0; }
+    }
+
+    if(shakeT>0) shakeT--;
+    if(flashT>0) flashT--;
+  }
+
+  // ── draw helpers ──
+  function drawBackground(){
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0, C.sky1);
+    g.addColorStop(0.55, C.sky2);
+    g.addColorStop(1, C.sky3);
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    // soft sun glow
+    const sun = ctx.createRadialGradient(W*0.78,H*0.20,8, W*0.78,H*0.20, W*0.7);
+    sun.addColorStop(0,'rgba(226,201,138,0.55)');
+    sun.addColorStop(0.3,'rgba(226,201,138,0.12)');
+    sun.addColorStop(1,'rgba(226,201,138,0)');
+    ctx.fillStyle = sun;
+    ctx.fillRect(0,0,W,H);
+
+    // distant arch silhouettes (parallax skyline)
+    ctx.fillStyle = 'rgba(154,91,60,0.10)';
+    const baseY = ground.y;
+    const aw = W*0.16;
+    for(let i=-1;i<=W/aw+1;i++){
+      const x = i*aw - (frame*0.25 % aw);
+      ctx.beginPath();
+      ctx.moveTo(x, baseY);
+      ctx.lineTo(x, baseY-aw*0.55);
+      ctx.arc(x+aw*0.5, baseY-aw*0.55, aw*0.5, Math.PI, 0);
+      ctx.lineTo(x+aw, baseY);
+      ctx.fill();
+    }
+
+    // decor (clouds / lanterns)
+    for(const d of decor){
+      if(d.lantern){
+        ctx.save();
+        ctx.translate(d.x, d.y);
+        ctx.globalAlpha = 0.6;
+        ctx.strokeStyle='rgba(126,74,48,0.25)';
+        ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(0,-18*d.s); ctx.lineTo(0,-30*d.s); ctx.stroke();
+        ctx.fillStyle='rgba(201,168,108,0.5)';
+        ctx.beginPath();
+        ctx.ellipse(0,0,9*d.s,13*d.s,0,0,Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle='rgba(226,201,138,0.6)';
+        ctx.fillRect(-7*d.s,-2*d.s,14*d.s,4*d.s);
+        ctx.restore();
+      } else {
+        ctx.fillStyle='rgba(255,255,255,0.55)';
+        ctx.beginPath();
+        ctx.ellipse(d.x, d.y, 34*d.s, 14*d.s, 0, 0, Math.PI*2);
+        ctx.ellipse(d.x+22*d.s, d.y+4*d.s, 24*d.s, 11*d.s, 0, 0, Math.PI*2);
+        ctx.ellipse(d.x-22*d.s, d.y+4*d.s, 22*d.s, 10*d.s, 0, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+  }
+
+  function drawPipe(p){
+    const w = p.w, x = p.x;
+    const capH = Math.max(22, w*0.34);
+    // column gradient
+    function column(yTop, yBot){
+      const g = ctx.createLinearGradient(x,0,x+w,0);
+      g.addColorStop(0, C.deepTerra);
+      g.addColorStop(0.18, C.terra);
+      g.addColorStop(0.5, '#D2916F');
+      g.addColorStop(0.82, C.terra);
+      g.addColorStop(1, C.terraDark);
+      ctx.fillStyle = g;
+      ctx.fillRect(x, yTop, w, yBot-yTop);
+      // vertical fluting lines
+      ctx.strokeStyle='rgba(126,74,48,0.30)';
+      ctx.lineWidth=1;
+      for(let i=1;i<4;i++){
+        const lx = x + (w/4)*i;
+        ctx.beginPath(); ctx.moveTo(lx,yTop); ctx.lineTo(lx,yBot); ctx.stroke();
+      }
+    }
+    function cap(cy){
+      const g = ctx.createLinearGradient(x,0,x+w,0);
+      g.addColorStop(0, C.terraDark);
+      g.addColorStop(0.5, C.deepTerra);
+      g.addColorStop(1, C.terraDark);
+      ctx.fillStyle = g;
+      ctx.fillRect(x-6, cy, w+12, capH);
+      ctx.fillStyle='rgba(226,201,138,0.45)';
+      ctx.fillRect(x-6, cy, w+12, 3);
+    }
+    // top column (hangs from ceiling)
+    column(0, p.top - capH);
+    cap(p.top - capH);
+    // bottom column (rises from ground)
+    column(p.top + p.gap + capH, ground.y);
+    cap(p.top + p.gap);
+    // bottom cap sits at top of bottom column already; draw arch underside accent
+    ctx.fillStyle='rgba(28,24,18,0.06)';
+    ctx.fillRect(x, 0, 2, p.top-capH);
+  }
+
+  function drawGround(){
+    // ground band
+    ctx.fillStyle = C.olive;
+    ctx.fillRect(0, ground.y, W, H-ground.y);
+    const g = ctx.createLinearGradient(0,ground.y,0,ground.y+18);
+    g.addColorStop(0,'rgba(28,24,18,0.18)');
+    g.addColorStop(1,'rgba(28,24,18,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,ground.y,W,18);
+    // top stripe
+    ctx.fillStyle = C.gold;
+    ctx.fillRect(0, ground.y, W, 5);
+    // moving cobble texture
+    ctx.fillStyle='rgba(28,24,18,0.12)';
+    const tile=26;
+    const off = (state===STATE.PLAY||state===STATE.DEAD) ? (frame*0) : 0;
+    const sx = -((frame*(speed||2)) % tile);
+    for(let x=sx; x<W; x+=tile){
+      ctx.fillRect(x, ground.y+12, tile*0.5, 4);
+    }
+  }
+
+  function drawBird(){
+    const b = bird;
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(b.rot);
+    // shadow
+    ctx.fillStyle='rgba(28,24,18,0.10)';
+    ctx.beginPath(); ctx.ellipse(0,b.r*0.95,b.r*0.9,b.r*0.4,0,0,Math.PI*2); ctx.fill();
+    // body
+    const bg = ctx.createRadialGradient(-b.r*0.3,-b.r*0.3,b.r*0.2,0,0,b.r*1.3);
+    bg.addColorStop(0, C.goldLt);
+    bg.addColorStop(0.6, C.terra);
+    bg.addColorStop(1, C.deepTerra);
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.arc(0,0,b.r,0,Math.PI*2); ctx.fill();
+    // belly
+    ctx.fillStyle='rgba(253,250,244,0.55)';
+    ctx.beginPath(); ctx.ellipse(b.r*0.1,b.r*0.35,b.r*0.6,b.r*0.45,0,0,Math.PI*2); ctx.fill();
+    // wing (flaps)
+    const wf = Math.sin(frame*0.5)* (0.3) + b.wing*0.6;
+    ctx.fillStyle = C.deepTerra;
+    ctx.save();
+    ctx.translate(-b.r*0.2, 0);
+    ctx.rotate(-0.4 - wf);
+    ctx.beginPath(); ctx.ellipse(0,0,b.r*0.85,b.r*0.45,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = C.terraDark;
+    ctx.beginPath(); ctx.ellipse(b.r*0.1,b.r*0.05,b.r*0.5,b.r*0.28,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    // tail
+    ctx.fillStyle = C.deepTerra;
+    ctx.beginPath();
+    ctx.moveTo(-b.r*0.85,0);
+    ctx.lineTo(-b.r*1.5,-b.r*0.4);
+    ctx.lineTo(-b.r*1.4, b.r*0.4);
+    ctx.closePath(); ctx.fill();
+    // eye
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(b.r*0.45,-b.r*0.25,b.r*0.28,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=C.charcoal;
+    ctx.beginPath(); ctx.arc(b.r*0.52,-b.r*0.25,b.r*0.14,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(b.r*0.57,-b.r*0.30,b.r*0.05,0,Math.PI*2); ctx.fill();
+    // beak
+    ctx.fillStyle = C.gold;
+    ctx.beginPath();
+    ctx.moveTo(b.r*0.9,-b.r*0.05);
+    ctx.lineTo(b.r*1.45, b.r*0.06);
+    ctx.lineTo(b.r*0.9, b.r*0.22);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+
+  function render(){
+    ctx.save();
+    if(shakeT>0){
+      const s = shakeT*0.6;
+      ctx.translate((Math.random()-0.5)*s,(Math.random()-0.5)*s);
+    }
+    drawBackground();
+    for(const p of pipes) drawPipe(p);
+    drawGround();
+    drawBird();
+    ctx.restore();
+
+    if(flashT>0){
+      ctx.fillStyle='rgba(253,250,244,'+(flashT/8*0.5)+')';
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+
+  function loop(){
+    update();
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // ── input ──
+  function onTap(e){
+    if(e.target.closest('.btn') || e.target.closest('.back')) return;
+    e.preventDefault();
+    flap();
+  }
+  cv.addEventListener('pointerdown', onTap, {passive:false});
+  window.addEventListener('keydown', (e)=>{
+    if(e.code==='Space' || e.code==='ArrowUp'){
+      e.preventDefault();
+      if(state===STATE.DEAD){ start(); } else { flap(); }
+    }
+  });
+  document.getElementById('startBtn').addEventListener('click',(e)=>{e.preventDefault();start();});
+  document.getElementById('retryBtn').addEventListener('click',(e)=>{e.preventDefault();start();});
+
+  // init
+  resize();
+  reset();
+  document.getElementById('liveScore').textContent = '0';
+  loop();
+})();
+</script>
+</body>
+</html>

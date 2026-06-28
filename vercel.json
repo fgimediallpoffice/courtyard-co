@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "game.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "images/**",
       "use": "@vercel/static"
     },
@@ -18,6 +22,7 @@
   "routes": [
     { "src": "/admin/(.*)", "dest": "/admin/dist/$1" },
     { "src": "/admin", "dest": "/admin/dist/index.html" },
+    { "src": "/game", "dest": "/game.html" },
     { "src": "/images/(.*)", "dest": "/images/$1" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
